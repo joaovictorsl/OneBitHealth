@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Text, StyleSheet, Vibration, Pressable, Keyboard } from 'react-native'
 import { ThemeContext } from '../../context/ThemeContext'
 import { ResultImc } from './ResultIMC'
 import { StyledInput } from './StyledInput'
@@ -15,11 +15,13 @@ export const Form = () => {
   const [messageImc, setMessageImc] = React.useState("Preencha o peso e a altura.")
   const [imc, setImc] = React.useState(null)
   const [textButton, setTextButton] = React.useState("Calcular IMC")
+  const [errorMessage, setErrorMessage] = React.useState(null)
 
   function updateText(newImc) {
     if (newImc) {
       setHeight(null)
       setWeight(null)
+      setErrorMessage(null)
       setImc(newImc)
       setClassification(IMC.imcClassification(newImc))
       setMessageImc('Seu IMC é igual a:')
@@ -27,6 +29,8 @@ export const Form = () => {
     }
     else {
       setImc(null)
+      Vibration.vibrate([0, 150, 150, 150])
+      setErrorMessage('*Campo obrigatório*')
       setClassification(null)
       setTextButton("Calcular")
       setMessageImc("Preencha o peso e a altura.")
@@ -57,12 +61,14 @@ export const Form = () => {
   })
 
   return (
-    <View style={styles.form}>
+    <Pressable style={styles.form}
+      onPress={Keyboard.dismiss}>
       <StyledInput
         label='Altura (m)'
         placeholder='Ex. 1.75'
         keyboardType='numeric'
         value={height}
+        errorMessage={errorMessage}
         onChangeText={(e) => setHeight(e)}
       />
 
@@ -71,6 +77,7 @@ export const Form = () => {
         placeholder='Ex. 75'
         keyboardType='numeric'
         value={weight}
+        errorMessage={errorMessage}
         onChangeText={(e) => setWeight(e)}
       />
 
@@ -85,6 +92,6 @@ export const Form = () => {
         messageResultImc={messageImc}
         resultImc={imc}
       />
-    </View>
+    </Pressable>
   )
 }

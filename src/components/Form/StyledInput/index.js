@@ -1,10 +1,18 @@
 import React from 'react'
-import { Text, TextInput } from 'react-native'
-import { ThemeContext, ThemeProvider } from '../../../context/ThemeContext'
+import { StyleSheet, Text, TextInput } from 'react-native'
+import { ThemeContext } from '../../../context/ThemeContext'
 
-export const StyledInput = ({ label, placeholder, keyboardType, value, onChangeText }) => {
+export const StyledInput = ({ label, placeholder, keyboardType, value, onChangeText, errorMessage }) => {
 
   const { theme } = React.useContext(ThemeContext)
+
+  const styles = StyleSheet.create({
+    errorMessage: {
+      fontSize: 14,
+      color: 'red',
+      fontWeight: 'bold'
+    }
+  })
 
   return (
     <>
@@ -19,6 +27,7 @@ export const StyledInput = ({ label, placeholder, keyboardType, value, onChangeT
         value={value}
         onChangeText={e => onChangeText(e)}
       />
+      {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
     </>
   )
 }
